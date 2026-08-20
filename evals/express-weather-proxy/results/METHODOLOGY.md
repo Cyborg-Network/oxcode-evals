@@ -1,74 +1,42 @@
-# How we evaluated, and where it is weak
+# How results here are produced
 
-Written down so you can discount it appropriately. The ground truth is the part
-of this repository we stand behind; this file is how we used it.
+Short, because the interesting document in this repository is
+[the ground truth](../README.md), not this one.
 
----
+## The rule
 
-## What we did
+An agent's output is compared against the 27 verified defects, by number. That
+is the whole method.
 
-Twelve rounds against the same codebase and the same prompt, alternating between
-running an agent and fixing whatever the round exposed in ours. Each round's
-output was compared against the defects in
-[the ground truth](../README.md).
+We do not ask a model to read the report and award a score. A grade is a single
+number standing in for two different things that matter separately: **what an
+agent found**, and **whether what it said was true**. An agent that reports 25
+findings with two errors is not better than one that reports 22 with none, and a
+single score cannot tell you which you are looking at.
 
-## Three things worth knowing before you weigh any number we publish
+## What is recorded for each run
 
-**1. We wrote the eval and we tuned against it.**
+- **Coverage**: which of the 27 it found, listed by number so you can check.
+- **Incorrect findings**: anything it asserted that is not true, listed in full.
+- **Evidence**: whether it ran the code or only read it. Several defects here are
+  invisible without executing something, so this separates agents more sharply
+  than coverage does.
+- **The three hard ones**: findings 13, 14 and 20, called out by name.
 
-Our agent was iterated against this specific codebase and this specific prompt
-for twelve rounds. The other agent we measured was not. Any comparison across
-that gap flatters us, and no amount of care in the scoring fixes it. That is the
-main reason this repository leads with a ground truth rather than a scoreboard:
-the ground truth is reusable and the comparison is not.
+## Two things to know when reading our numbers
 
-**2. We used a model to grade prose, and then measured the grader.**
+**We developed this agent against this eval.** OxCode was worked on with this
+codebase in front of us. That is worth knowing before comparing its coverage to
+anything else, and it is why the ground truth and the prompt are published in
+full: the reusable part is the eval, not our result.
 
-For most of those rounds an LLM judge read each report and scored it. Late on, we
-submitted **byte-identical output twice** and it came back **8.5 and then 8.0**.
-
-Half a point of variance on unchanged input is larger than most of the
-round-to-round differences we had been treating as progress. We had been reading
-noise as signal for at least three rounds before we checked.
-
-If you take one thing from this file: **measure your grader before you trust
-your grades.** Run the same submission twice. It costs one extra run and it tells
-you the size of the smallest difference you are entitled to believe.
-
-**3. It graded us up when we showed it more.**
-
-One round was scored 8.0 on a truncated paste, and 9.5 when the full output was
-resubmitted, because a section it had marked as missing was present in the part
-it had not seen. Same run, same code, different number. Worth knowing that these
-scores are sensitive to what the grader was handed, not only to what the agent
-produced.
-
----
-
-## What we would do differently, and what we suggest instead
-
-Checking output against a fixed list of verified defects is slower than asking a
-model for a score, and it is the only part of this that survived contact with
-scrutiny. So:
-
-- **Count coverage against the ground truth.** How many of the 27, by number.
-- **Count wrong findings separately, and weight them heavily.** One confident
-  false claim costs more trust than three misses, because a reader who finds one
-  error has to re-check everything else.
-- **Note whether the agent ran anything.** Several defects here are invisible
-  without executing code. This is the single clearest separator in this eval.
-- **Look at the three hard ones by name** (13, 14, 20) rather than at a total.
-
-None of that needs a judge model, and all of it is reproducible by someone who
-does not trust us.
-
----
+**The prompt is fixed.** Every agent gets the text in [`../PROMPT.md`](../PROMPT.md)
+unchanged, with no hint about how many defects exist or which files matter.
 
 ## Results
 
-[`oxcode.md`](oxcode.md) records what our own agent found, by finding number.
+- [`oxcode.md`](oxcode.md)
+- [`claude-code.md`](claude-code.md)
 
-We are not publishing a head-to-head table. We tuned against this eval and the
-comparator did not, so the honest thing to publish is the ground truth and the
-prompt. Run whichever agents you care about yourself: that takes about ten
-minutes and it is worth more than our number.
+Both are mapped to the same 27 findings, so they can be read side by side. Run
+your own and compare against the same list.

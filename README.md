@@ -16,19 +16,20 @@ of this repository is the ground truth, not the scoreboard.
 It is easy to ask an agent to review some code. It is hard to know whether its
 answer was any good.
 
-Most comparisons resolve that by asking a model to grade the output. That works
-until you measure it. We did, and our own judge scored the same submission
-**8.5 and then 8.0 on byte-identical input**. Half a point of noise is larger
-than most of the differences people report.
+The usual shortcut is to ask a model to grade the output. That collapses two
+things worth separating: **what an agent found**, and **whether what it said was
+true**. An agent reporting 25 findings with two errors is not better than one
+reporting 22 with none, and a single number cannot tell you which you are
+looking at.
 
-So these evals are built the other way round. The answers are worked out first,
-by hand, against the code, and written down with the evidence. Then an agent's
-output is checked against them.
+So these evals work the other way round. The answers are established first, by
+hand, against the code, with the evidence recorded. Then an agent's output is
+checked against them.
 
 Each finding is marked:
 
-- **VERIFIED** — reproduced by running something. The command is included.
-- **REASONED** — derived from reading the code, with the reasoning stated.
+- **VERIFIED**: reproduced by running something. The command is included.
+- **REASONED**: derived from reading the code, with the reasoning stated.
 
 If you disagree with an entry, the evidence is there to argue with, which is the
 whole idea.
@@ -83,13 +84,25 @@ What we suggest looking at:
 
 ---
 
-## Our results
+## Results
 
-In [`evals/express-weather-proxy/results`](evals/express-weather-proxy/results),
-with the methodology written down including where it is weak.
+Two agents, mapped to the same 27 findings so they read side by side:
 
-We are not asking you to take those numbers on trust. Run it yourself: that is
-what the repository is for.
+| Agent | Found | Incorrect findings |
+|---|:--:|:--:|
+| [OxCode 0.5.0](evals/express-weather-proxy/results/oxcode.md) | 24 / 27 | 0 |
+| [Claude Code](evals/express-weather-proxy/results/claude-code.md) | 21 / 27 | 0 |
+
+Both found all four High-severity defects and all three separators. The
+differences are in the Low findings and in how each one justified its work,
+which is why each result file says what the agent did well rather than only
+counting.
+
+[How these are produced](evals/express-weather-proxy/results/METHODOLOGY.md),
+including the fact that we developed OxCode against this eval.
+
+Run your own and compare against the same list. That is what the repository is
+for.
 
 ---
 

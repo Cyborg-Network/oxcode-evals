@@ -7,9 +7,9 @@ An 89-line Express service that proxies the public Open-Meteo API. It has
 
 Every finding is marked:
 
-- **VERIFIED** — reproduced by running something. The command is included, so
+- **VERIFIED**: reproduced by running something. The command is included, so
   you can check it yourself in a few seconds.
-- **REASONED** — derived from reading the code, with the reasoning stated.
+- **REASONED**: derived from reading the code, with the reasoning stated.
 
 All VERIFIED entries were re-run against this exact source on 2026-08-20 with
 Node 22.
@@ -51,7 +51,7 @@ see it.
 ## server.js
 
 ### 1. Hardcoded port, no `process.env.PORT`
-`server.js:3` — `const PORT = 3001;`
+`server.js:3`, `const PORT = 3001;`
 
 Every container platform assigns a port through the environment and health-checks
 that port. A hardcoded one means the platform routes to a port nothing is
@@ -113,7 +113,7 @@ severs in-flight requests instead of draining them.
 ## app.js
 
 ### 6. Wildcard CORS
-`app.js:6` — `app.use(cors())`
+`app.js:6`, `app.use(cors())`
 
 With no options, `cors()` sends `Access-Control-Allow-Origin: *` on every
 response. The only route is an unauthenticated passthrough to a third-party API,
@@ -131,7 +131,7 @@ private data to expose. Higher the moment either exists.
 VERIFIED.
 
 ### 7. Framework version advertised, and no security headers
-`app.js` — nothing sets headers, no `helmet`
+`app.js`, nothing sets headers and no `helmet`
 
 ```
 $ curl -i localhost:3001/health
@@ -160,7 +160,7 @@ succeed, and it pollutes your error budget.
 **Severity: Medium.** VERIFIED.
 
 ### 9. The error handler assumes it was given an `Error`
-`app.js:23` — `console.error(err.stack)`
+`app.js:23`, `console.error(err.stack)`
 
 A thrown string or a rejected non-Error has no `.stack`, so the only diagnostic
 you had logs as `undefined`.
@@ -298,7 +298,7 @@ a real Open-Meteo incident is hidden in that same noise.
 **Severity: Medium.** VERIFIED.
 
 ### 18. The internal error message is returned to the client
-`weather.js:39` — `err.message`
+`weather.js:39`, `err.message`
 
 Whatever the runtime threw goes to the caller verbatim: DNS failures, TLS
 errors, file paths. It also contradicts the deliberate choice at `app.js:24` to
@@ -345,7 +345,7 @@ Ambiguous input should be rejected, not silently resolved to one of the values.
 **Severity: Low.** VERIFIED.
 
 ### 22. The `||` fallback on line 39 is unreachable for real Errors
-`weather.js:39` — `err.message || 'Failed to fetch weather data'`
+`weather.js:39`, `err.message || 'Failed to fetch weather data'`
 
 `Error.prototype.message` is always a string, and every error thrown here is an
 Error, so the fallback only fires for a thrown non-Error. It reads as a safety

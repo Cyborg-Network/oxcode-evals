@@ -35,7 +35,7 @@ returns `0`, which would mean an empty `lat` passes validation. A probe returned
 `NaN`, checked whitespace and tab and newline as well, and then dropped the
 finding rather than reporting it:
 
-> *"Interesting — `parseFloat("")` returns NaN in Node.js 22, not 0. My earlier
+> *"Interesting, `parseFloat("")` returns NaN in Node.js 22, not 0. My earlier
 > reasoning was wrong."*
 
 That is the behaviour we most wanted, because a confident wrong finding is the
