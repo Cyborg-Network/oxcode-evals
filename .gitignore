@@ -1,0 +1,4 @@
+node_modules/
+.oxcode/
+.oxcode-memory/
+*.local.md

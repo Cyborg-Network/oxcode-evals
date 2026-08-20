@@ -1,0 +1,14 @@
+{
+  "name": "oxcode-testbed-backend",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "description": "Express backend for oxcode-testbed",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cors": "^2.8.5"
+  }
+}
